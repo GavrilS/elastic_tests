@@ -19,3 +19,7 @@ docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.9
 
 - delete the network, containers and volumes when we stop the cluster, specify the -v flag:
   docker-compose down -v
+
+3. If the command to start the container and the nodes fails with a message:
+   'bootstrap check failure [1] of [1]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]' you will need to add additional virtual memory to the vm. For docker-desktop using wsl run the following commands: - wsl -d docker-desktop - sysctl -w vm.max_map_count=262144 - exit
+   After that try to run the command to start the cluster again.
