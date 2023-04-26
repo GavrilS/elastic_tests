@@ -7,6 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-ENTRYPOINT [ "python3", "src/test_logger.py" ]
+ENTRYPOINT [ "python3", "src/setup.py" ]
 
 CMD [ "--log_type", "info" ]
