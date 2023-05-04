@@ -8,6 +8,9 @@ def main():
     client = set_connection(elk_host, elk_key)
     index_exists = check_index('script-logs', client)
     print("Index exists result:\n", index_exists)
+    if not index_exists:
+        index_created = create_index('script-logs', client)
+        print('Result of index creation:\n', index_created)
     exit()
     sample_log = {}
     if 'info' in log_type:
@@ -79,7 +82,7 @@ def set_connection(elastic_host, elastic_key=None):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Script for elk setup jobs.')
-    parser.add_argument('--elk_host', default='http://localhost:9200',
+    parser.add_argument('--elk_host', default='http://elasticsearch:9200',
                         help='The elasticsearch url used for the connection.')
     parser.add_argument('--elk_key', default=None,
                         help='The key used for authenticaion if required.')

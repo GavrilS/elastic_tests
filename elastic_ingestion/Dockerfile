@@ -8,5 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 ENTRYPOINT [ "python3", "src/setup.py" ]
+# ENTRYPOINT [ "python3", "src/test_connection.py" ]
 
 CMD [ "--log_type", "info" ]
