@@ -1,6 +1,6 @@
 from datetime import datetime
 from argparse import ArgumentParser
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 import get_configs as gc
 
 
@@ -11,15 +11,31 @@ def main():
     if not index_exists:
         index_created = create_index('script-logs', client)
         print('Result of index creation:\n', index_created)
-    exit()
+    # exit()
     sample_log = {}
+    logs = []
     if 'info' in log_type:
-        sample_log = create_info_log()
+        for i in range(0, 5):
+            sample_log = create_info_log()
+            logs.append(sample_log)
     else:
         sample_log = create_error_log()
+        logs.append(sample_log)
+
+    send_to_elastic(client, logs)
 
 
-def create_info_log(log_type):
+def send_to_elastic(client, payload):
+    result = helpers.bulk(client, gen_data(payload))
+    print('Result from the bulk index is\n', result)
+
+
+def gen_data(payload):
+    for item in payload:
+        yield item
+
+
+def create_info_log(log_type='INFO', index='script-logs'):
     now = datetime.now().isoformat()
     message = 'This is a sample log for testing. No errors!'
     service = {
@@ -33,12 +49,13 @@ def create_info_log(log_type):
         'service': service,
         'log': {
             'level': log_type
-        }
+        },
+        '_index': index
     }
     return sample_log
 
 
-def create_error_log(log_type):
+def create_error_log(log_type='ERROR', index='script-logs'):
     now = datetime.now().isoformat()
     message = 'This is a sample log for testing with errors!'
     service = {
@@ -52,7 +69,8 @@ def create_error_log(log_type):
         'service': service,
         'log': {
             'level': log_type
-        }
+        },
+        '_index': index
     }
     return sample_log
 
@@ -62,7 +80,7 @@ def create_index(index_name, client):
     response = client.indices.create(
         index="script-logs",
         settings=configs['settings'],
-        mapping=configs['mappings']
+        mappings=configs['mappings']
     )
     return response
 
