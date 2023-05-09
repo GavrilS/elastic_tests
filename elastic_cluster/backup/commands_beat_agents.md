@@ -2,13 +2,22 @@ Commands to run beat agents with docker:
 
 # Metricbeat:
 
-1. Pull the image - docker pull docker.elastic.co/beats/metricbeat:7.17.9
+1. Pull the image - docker pull docker.elastic.co/beats/metricbeat:8.2.2
 2. Run the metricbeat setup(it will create index pattern, load visualizations, dashboards and machine learning jobs):
    docker run \
-   docker.elastic.co/beats/metricbeat:7.17.9 \
-   setyp -E setup.kibana.host=localhost:5601 \
-   -E output.elasticsearch.hosts=["localhost:9200"]
+   docker.elastic.co/beats/metricbeat:8.2.2 \
+   setup -E setup.kibana.host=kibana:5601 \
+   -E output.elasticsearch.hosts=["elasticsearch:9200"] \
+   --network=elastic
 
+   docker run --network=elastic docker.elastic.co/beats/metricbeat:8.2.2 setup -E setup.kibana.host=kibana:5601 -E output.elasticsearch.hosts=["elasticsearch:9200"]
+
+   docker run --network=elastic docker.elastic.co/beats/metricbeat:8.2.2 --help
+
+   docker run --network-elastic docker.elastic.co/beats/metricbeat:8.2.2 run -e
+
+<!--
+============= Need to be updated ====================
 - With configuration file options:
 
 1. Download a sample config file:
@@ -28,3 +37,4 @@ Commands to run beat agents with docker:
    docker run -d --name=metricbeat --network=elast-alert_default --user=root --volume="C:\Users\Gari\Desktop\Projects\Elastic alert test\elastic_cluster\metricbeat.docker.yml:/tmp/share/metricbeat/metricbeat.yml:ro" --volume="/var/run/docker.sock:/var/run/docker.sock:ro" --volume="/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro" --volume="/proc:/hostfs/proc:ro" --volume="/:/hostfs:ro" docker.elastic.co/beats/metricbeat:7.17.9 metricbeat -e -E output.elasticsearch.hosts=["es01:9200"]
 
 docker run docker.elastic.co/beats/metricbeat:7.17.9 setup -E setup.kibana.host=kibana:5601 -E output.elasticsearch.hosts=["172.18.0.3:9300"]
+-->
