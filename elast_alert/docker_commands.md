@@ -30,3 +30,4 @@ docker run -i -t ubuntu bash
 # Save changes made to container and make it into a new image:
 
 sudo docker commit <container_id> <new_image_name>
+docker commit 482fda53a312 ubuntu-python3
